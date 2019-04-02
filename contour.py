@@ -143,12 +143,12 @@ if __name__ =="__main__":
         for infile in glob.glob("*.jpeg"):
             file, ext = os.path.splitext(infile)
             rep_img, res_img = get_bifurcation_points(infile)
-            rep_img.save(arg2+"/D"+infile,"JPEG")
+            rep_img.save(arg2+"/"+infile,"JPEG")
             res_img.save(arg2+"/Result_"+file+".png","PNG")
 
     else:
         file, ext = os.path.splitext(arg1)
         rep_img, res_img =get_bifurcation_points(arg1)
-        rep_img.save(arg2+"/D"+arg1,"JPEG")
+        rep_img.save(arg2+"/"+arg1,"JPEG")
         res_img.save(arg2+"/Result_"+file+".png","PNG")
     os.chdir(current_dir)
