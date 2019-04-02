@@ -1,15 +1,10 @@
 """
  purpose : To make database of contour tree bifurcation points
-
   contour tree bifurcation points = joint tree bifurcation points Unions split tree bifurcation points
-
   how to use :
-
   there is three option :
     python contour.py [image file name] [directory name to save result]
-
     python contour.py [image file name]
-
     python contour.py [image file name] [directory name to save result] [directory name for input image file]
  result :
     bifurcation data ( it is image )
@@ -18,17 +13,14 @@
   [
     same size of image which is cosisted of "0" "1" "2" "3"
   ]
-
   data of bifurcation points
     the number in order index order
     0 0 0 0 ...  1 ...  2 ... 3 ...0 0 0 0
     < number of numbers in line = number of index in image = rows * cols >
-
     0 means "it is not bifurcation point."
     1 means "it is bifurcation point only in joint tree."
     2 means "it is bifurcation point only in split tree."
     3 menas "it is bifurcation point in both joint tree and split tree."
-
     index order :
      [i th] index means location :: ( i% #ofrows , i/ #of cols)
     so it does like following ... if image size is 4 by 5
@@ -87,6 +79,7 @@ def draw_filled_circle (imgae_object,xy_of_center,radius,color = 'red'):
         draw.ellipse(xy,  fill=color,outline=color)
     else:
         draw.point(xy_of_center, fill=color)
+
 def draw_all_bifurcation_point(image_object,number_of_rows_im , number_of_cols_im,joint_point,split_point):
 
     radius_of_contour_point = max(int((number_of_rows_im + number_of_cols_im)*0.001),1)
@@ -94,11 +87,11 @@ def draw_all_bifurcation_point(image_object,number_of_rows_im , number_of_cols_i
     for i in range(len(joint_point)):
         xycenter = center_to_xy(i, number_of_cols_im, number_of_rows_im)
         if joint_point[i] and split_point[i]:
-            draw_filled_circle(image_object,xycenter,radius_of_contour_point,'red')
+            draw_filled_circle(image_object,xycenter,radius_of_contour_point,'white')
         if joint_point[i] and not split_point[i]:
-            draw_filled_circle(image_object, xycenter, radius, 'blue')
+            draw_filled_circle(image_object, xycenter, radius, 'white')
         if split_point[i] and not joint_point[i]:
-            draw_filled_circle(image_object, xycenter, radius, 'green')
+            draw_filled_circle(image_object, xycenter, radius, 'white')
 def get_bifurcation_points(imagefilename):
     im = Image.open(imagefilename)
     grayimg = im.convert('LA')
@@ -112,7 +105,8 @@ def get_bifurcation_points(imagefilename):
     jointsplittree.make(increasing_indices[::-1])  # reverse
     split_bifurcation_point = jointsplittree.get_bifurcation_point()
 
-    representing_img = grayimg.convert('RGB')
+    representing_img = Image.new('RGB', (number_of_cols, number_of_rows))
+    #representing_img = grayimg.convert('RGB')
     draw_all_bifurcation_point(representing_img, number_of_rows, number_of_cols,
                                joint_bifurcation_point, split_bifurcation_point)
     res_array = np.zeros( number_of_rows*number_of_cols,dtype=int)
@@ -149,12 +143,12 @@ if __name__ =="__main__":
         for infile in glob.glob("*.jpeg"):
             file, ext = os.path.splitext(infile)
             rep_img, res_img = get_bifurcation_points(infile)
-            rep_img.save(arg2+"/B"+infile,"JPEG")
+            rep_img.save(arg2+"/D"+infile,"JPEG")
             res_img.save(arg2+"/Result_"+file+".png","PNG")
 
     else:
         file, ext = os.path.splitext(arg1)
         rep_img, res_img =get_bifurcation_points(arg1)
-        rep_img.save(arg2+"/B"+arg1,"JPEG")
+        rep_img.save(arg2+"/D"+arg1,"JPEG")
         res_img.save(arg2+"/Result_"+file+".png","PNG")
     os.chdir(current_dir)
